@@ -1,46 +1,194 @@
-# KI-Agent_Abgrenzungen
+## Bedingungen, die für/gegen die Nutzung eines KI Agenten sprechen
 
-# Wann lohnt sich ein KI-Agent für einen Geschäftsvorfall?
+Ein guter Ausgangspunkt: Wenn menschliche Sprache als Input dient, kann ein KI-Agent besonders nützlich sein. Allerdings ist Sprache allein noch kein ausreichender Grund für einen Agenten. Ein klassischer Sprachverarbeitungsbaustein oder ein LLM-Aufruf ohne agentische Fähigkeiten kann dafür bereits ausreichen.
 
-Natürlichsprachliche Eingabe ist ein guter Hinweis, aber eher ein Symptom als das eigentliche Kriterium. Dahinter steckt: der Vorfall ist nicht sauber strukturiert und lässt sich nicht vorab in ein Formular pressen.
+Entscheidend ist vielmehr, ob eine Aufgabe Flexibilität, Interpretation, dynamische Entscheidungen und die Koordination mehrerer Handlungsschritte erfordert – und ob diese Fähigkeiten den zusätzlichen Aufwand und die Risiken rechtfertigen.
 
-## Vier Stufen der Automatisierung
+## 1. Bedingungen, die für einen KI-Agenten sprechen
 
-| Stufe | Beschreibung | Beispiel |
-|-------|--------------|----------|
-| 0. Rein regelbasiert, keine KI | Strukturierte Eingaben, feste Regeln, deterministisches Ergebnis | Rechnung freigeben, wenn Betrag unter Limit und Bestellnummer vorhanden |
-| 1. Einzelner LLM-Aufruf | Ein Schritt, kein Ablauf | Klassifizieren, Extrahieren, Zusammenfassen |
-| 2. Fester Workflow mit LLM-Schritten | Reihenfolge der Schritte steht fest, einzelne Schritte brauchen Sprachverständnis | Eingang prüfen → Felder extrahieren → Ticket anlegen → Antwort entwerfen |
-| 3. Agent | Das Modell entscheidet selbst, welche Schritte, in welcher Reihenfolge und wie oft | Reklamation mit Rückfragen, Recherche, Fehlersuche |
+Ich würde die folgenden Kriterien sammeln und sie nach ihrem praktischen Nutzen ordnen.
 
-Ein Agent lohnt sich erst auf Stufe 3. Immer mit der einfachsten Stufe anfangen, die den Fall löst. Oft ist das Stufe 0.
+1\. Unstrukturierter oder natürlichsprachlicher Input
 
-## Stufe 0: Wann gar keine KI nötig ist
+Die Eingaben kommen als Freitext, E-Mail, Dokument, Chatnachricht oder gesprochene Sprache. Bedeutung und Absicht müssen interpretiert werden, statt nur feste Felder auszulesen.
 
-Viele Geschäftsvorfälle brauchen kein Sprachmodell. Eine regelbasierte Lösung (Workflow-Engine, Skript, klassische Software, RPA) ist die richtige Wahl, wenn:
+Beispiel: Ein Agent versteht eine Kundenanfrage wie „Meine Bestellung ist immer noch nicht da – könnt ihr das bitte klären?“ und leitet daraus die nächsten Schritte ab.
 
-- **Die Eingaben strukturiert sind.** Formularfelder, Datenbankeinträge, API-Payloads, klar definierte Dateiformate.
-- **Die Entscheidungslogik vollständig als Regeln formulierbar ist.** Wenn-dann-Bedingungen, Schwellwerte, Lookup-Tabellen, Zuständigkeitsmatrizen.
-- **Jeder Fall gleich behandelt werden muss.** Gleiche Eingabe, gleiches Ergebnis, immer. Kein Interpretationsspielraum erlaubt.
-- **Nachvollziehbarkeit Pflicht ist.** Buchhaltung, Steuern, Fristen, Zugriffsrechte, regulierte Prozesse.
-- **Exaktheit zählt.** Berechnungen, Abgleiche, Validierungen. Ein Sprachmodell rundet, rät oder übersieht; Code tut das nicht.
-- **Volumen hoch und Latenz kritisch ist.** Regeln laufen in Millisekunden und kosten praktisch nichts.
+2\. Unterschiedliche Lösungswege je nach Situation
 
-Typische Beispiele: Rechnungsfreigabe nach Betragsgrenze, Mahnlauf, Dublettenprüfung per Schlüssel, Routing nach Postleitzahl, Berechtigungsvergabe nach Rolle, Stammdatenvalidierung.
+Der Ablauf lässt sich nicht vollständig im Voraus als feste Sequenz definieren. Welche Aktion als Nächstes sinnvoll ist, hängt von den bisherigen Ergebnissen und dem aktuellen Kontext ab.
 
-Warnsignal für einen überflüssigen KI-Einsatz: Die KI soll etwas tun, was ein Mitarbeiter nach einer Woche Einarbeitung fehlerfrei und ohne Nachdenken erledigt. Das ist eine Regel, kein Urteil.
+Beispiel: Bei einer Supportanfrage prüft der Agent je nach Fall zunächst den Bestellstatus, die Zahlungsdaten oder die Versandinformationen.
 
-## Kriterien, die für einen Agenten sprechen
+3\. Mehrstufige Aufgaben mit Zwischenentscheidungen
 
-- **Der Lösungsweg steht vorher nicht fest.** Erst nach Schritt 1 weiß man, was Schritt 2 ist. Typisch für Recherche, Triage, Fehlersuche, Reklamationen mit Rückfragen.
-- **Viele Verzweigungen und Sonderfälle.** Wenn die Regelmenge eines klassischen Workflows explodiert, weil jeder dritte Fall anders ist, ist der Agent billiger als die Regelpflege.
-- **Urteilsvermögen statt harter Regeln.** Plausibilität prüfen, priorisieren, zwischen ähnlichen Kategorien abwägen, Widersprüche in Dokumenten erkennen.
-- **Mehrere Quellen und Systeme müssen kombiniert werden.** CRM nachschlagen, Richtlinie lesen, Ticket anlegen, E-Mail formulieren. Der Agent orchestriert die Tools, statt dass ein Mensch zwischen Fenstern wechselt.
-- **Unvollständige Eingaben.** Der Agent muss selbst nachfragen oder nachrecherchieren.
-- **Unstrukturierte Eingaben jeder Art.** Nicht nur Freitext, auch E-Mails mit PDF-Anhang, Scans, Chatverläufe.
-- **Das Ergebnis ist selbst Text oder ein Entwurf.** Antwortschreiben, Zusammenfassung, Empfehlung, nicht nur ein Datensatz.
-- **Fehler sind erkennbar und korrigierbar.** Idealerweise gibt ein Mensch am Ende frei. Agenten sind nicht deterministisch; der Prozess muss das aushalten.
-- **Genug Volumen oder genug Zeit pro Fall.** Aufbau, Tests und Betrieb müssen sich rechnen.
+Die Aufgabe besteht aus mehreren voneinander abhängigen Schritten. Zwischenergebnisse beeinflussen, wie es weitergeht.
+
+Beispiel: Eine Marktanalyse durchführen, passende Quellen suchen, Informationen vergleichen und daraus einen Bericht erstellen.
+
+4\. Bedarf an dynamischer Tool-Auswahl
+
+Das System muss entscheiden, welches Werkzeug es wann verwendet – etwa eine API, Datenbank, Suchmaschine, einen Rechner oder ein internes Geschäftssystem.
+
+Beispiel: Ein Coding-Agent entscheidet, ob er zunächst den Code analysiert, Tests ausführt, eine Datei bearbeitet oder Dokumentation nachschlägt.
+
+5\. Iteratives Vorgehen und Anpassung an Zwischenergebnisse
+
+Die Lösung entsteht nicht unbedingt in einem einzigen Durchlauf. Das System kann Ergebnisse überprüfen, Fehler erkennen und weitere Schritte ausführen.
+
+Beispiel: Ein Agent generiert Code, führt Tests aus, analysiert fehlgeschlagene Tests und versucht eine Korrektur.
+
+6\. Kontextabhängige Entscheidungen
+
+Für eine sinnvolle Entscheidung müssen mehrere Informationen kombiniert werden, beispielsweise Gesprächsverlauf, Nutzerabsicht, Geschäftsdaten und bisherige Ergebnisse.
+
+Beispiel: Ein persönlicher Lernassistent passt Erklärungen an den Wissensstand und die bisherigen Schwierigkeiten eines Studierenden an.
+
+7\. Hohe Variabilität der Fälle
+
+Es gibt viele mögliche Eingabekombinationen, Ausnahmen und Sonderfälle. Ein umfassendes Regelwerk wäre schwer zu erstellen, zu testen und zu pflegen.
+
+Beispiel: Die Bearbeitung sehr unterschiedlicher Kundenanliegen, bei denen die relevanten Informationen und erforderlichen Schritte variieren.
+
+8\. Ein Ziel ist vorgegeben, aber nicht jeder Schritt
+
+Das System erhält ein Ergebnisziel und muss selbst einen geeigneten Weg dorthin bestimmen. Es geht also nicht nur um die Ausführung einer vorgegebenen Prozedur.
+
+Beispiel: „Finde drei geeignete Anbieter, vergleiche ihre Konditionen und begründe eine Empfehlung.“
+
+9\. Die relevante Umgebung verändert sich
+
+Der Agent muss auf neue Informationen, veränderte Daten oder unerwartete Tool-Ergebnisse reagieren können, statt nur einen statischen Ablauf abzuarbeiten.
+
+Beispiel: Ein Recherche-Agent passt seine Suche an, wenn die ursprünglichen Quellen nicht verfügbar sind oder neue Erkenntnisse eine andere Suchrichtung nahelegen.
+
+10\. Interaktion mit Menschen während der Aufgabenerledigung
+
+Das System muss Rückfragen stellen, fehlende Informationen ermitteln, Präferenzen berücksichtigen oder bei Unsicherheit eine Freigabe einholen.
+
+Beispiel: Ein Reiseplanungsagent fragt nach dem Budget, wenn dieses fehlt, und lässt eine Buchung vor ihrer Ausführung bestätigen.
+
+11\. Erforderliches Schlussfolgern unter Unsicherheit
+
+Informationen sind unvollständig, mehrdeutig oder widersprüchlich. Das System muss mehrere Hypothesen abwägen und gegebenenfalls zusätzliche Informationen beschaffen.
+
+Beispiel: Ein IT-Support-Agent untersucht anhand von Logs, Fehlermeldungen und Systeminformationen eine mögliche Fehlerursache.
+
+12\. Länger laufende Aufgaben mit persistentem Zustand
+
+Die Aufgabe erstreckt sich über mehrere Interaktionen oder Zeitpunkte. Der Agent muss den Fortschritt, offene Aufgaben und relevante Ergebnisse berücksichtigen.
+
+Beispiel: Ein Projektassistent verfolgt offene Arbeitspakete, erinnert an Abhängigkeiten und passt einen Arbeitsplan an neue Termine an.
+
+13\. Personalisierung und flexible Präferenzen
+
+Die optimale Vorgehensweise hängt von individuellen Präferenzen ab, die sich nicht sinnvoll in wenige feste Kategorien abbilden lassen.
+
+Beispiel: Ein Lernagent verändert Schwierigkeitsgrad, Erklärstil und Übungsform anhand von Feedback und Lernfortschritt.
+
+14\. Koordination unterschiedlicher Fähigkeiten oder Systeme
+
+Die Aufgabe erfordert die Zusammenarbeit mehrerer spezialisierter Komponenten, Werkzeuge oder gegebenenfalls Agenten.
+
+Beispiel: Ein System koordiniert Recherche, Datenanalyse und Berichterstellung. Dafür muss allerdings nicht zwingend eine Multi-Agent-Architektur verwendet werden.
+
+## 2. Wann ist eine regelbasierte Lösung die bessere Wahl?
+
+Die Kriterien oben beschreiben, wann agentische Fähigkeiten nützlich sein können. Für die Architekturentscheidung ist die Gegenseite mindestens genauso wichtig.
+
+| Bedingung         | Eher regelbasiert                             | Eher KI-Agent                                              |
+| ----------------- | --------------------------------------------- | ---------------------------------------------------------- |
+| Prozess           | Feste, bekannte Abläufe                       | Variable Abläufe                                           |
+| Eingaben          | Strukturierte Felder und klare Kategorien     | Freitext, mehrdeutige Informationen                        |
+| Entscheidungen    | Explizite Regeln und Schwellenwerte           | Kontextabhängige Abwägungen                                |
+| Ausnahmen         | Wenige, vorhersehbare Fälle                   | Viele unterschiedliche Sonderfälle                         |
+| Tool-Nutzung      | Vorgegebenes Tool in fester Reihenfolge       | Dynamische Auswahl und Reihenfolge                         |
+| Anforderungen     | Deterministisches, reproduzierbares Verhalten | Flexibilität und adaptive Problemlösung                    |
+| Fehlerfolgen      | Müssen durch feste Regeln kontrolliert werden | Erfordern zusätzliche Absicherung, Prüfungen und Freigaben |
+| Kosten und Latenz | Möglichst gering                              | Zusätzlicher Aufwand ist gerechtfertigt                    |
+
+Wichtig: Eine hohe Anzahl von Regeln allein rechtfertigt noch keinen KI-Agenten. Ein komplexer, aber stabiler Prozess kann weiterhin hervorragend durch eine Zustandsmaschine, einen Workflow oder ein Regelwerk abgebildet werden.
+
+## 3. Die entscheidende Unterscheidung: LLM oder Agent?
+
+Gerade für Studierende würde ich drei Architekturen auseinanderhalten:
+
+A. Regelbasierte Automatisierung
+
+Wenn A eintritt, führe B aus; andernfalls C. Der Ablauf ist vorgegeben.
+
+Beispiel: Bei einem Bestellwert über 500 Euro wird eine zusätzliche Freigabe angefordert.
+
+B. LLM-Aufruf innerhalb eines festen Workflows
+
+Ein Sprachmodell übernimmt eine klar begrenzte Aufgabe; der umgebende Programmablauf bleibt fest.
+
+Beispiel: Eine E-Mail wird klassifiziert und anschließend nach festen Regeln weitergeleitet.
+
+C. KI-Agent
+
+Das Modell entscheidet innerhalb definierter Grenzen über nächste Schritte, Tool-Aufrufe und die Fortsetzung der Aufgabe.
+
+Beispiel: Der Agent interpretiert eine E-Mail, prüft bei Bedarf Kundendaten, sucht nach einer Lösung und entscheidet, welche weitere Aktion erforderlich ist.
+
+Ein KI-Agent ist also nicht einfach ein System, das ein LLM verwendet. Ein wesentliches Unterscheidungsmerkmal ist, dass das Modell einen Teil der Steuerung des Lösungsprozesses übernimmt.
+
+## 4. Eine kompakte Entscheidungsregel für die Praxis
+
+Ich würde den Studierenden diese fünf Fragen mitgeben:
+
+Beantworte die Fragen für einen konkreten Anwendungsfall.
+
+1\. Muss das System unstrukturierte oder mehrdeutige Informationen interpretieren?
+
+Zum Beispiel Freitext, Dokumente oder unvollständige Nutzeranfragen.
+
+Ja
+
+Teilweise
+
+Nein
+
+2\. Muss es abhängig von Kontext und Zwischenergebnissen unterschiedliche nächste Schritte wählen?
+
+Nicht nur Inhalte klassifizieren, sondern den Ablauf selbst steuern.
+
+Ja
+
+Teilweise
+
+Nein
+
+3\. Muss es Werkzeuge dynamisch auswählen oder wiederholt einsetzen?
+
+Zum Beispiel APIs, Datenbanken, Suche oder Code-Ausführung.
+
+Ja
+
+Teilweise
+
+Nein
+
+4\. Sind die möglichen Lösungswege so variabel, dass ein fester Workflow unpraktisch wäre?
+
+Viele unterschiedliche Fälle, unerwartete Ergebnisse oder schwer vorab definierbare Pfade.
+
+Ja
+
+Teilweise
+
+Nein
+
+5\. Rechtfertigt der Nutzen die zusätzlichen Kosten und Risiken?
+
+Latenz, Modellkosten, Nichtdeterminismus, Evaluierung und Sicherheitsmaßnahmen.
+
+Ja
+
+Teilweise
+
+Nein
+
 
 ## Gegenindikatoren für einen Agenten
 
